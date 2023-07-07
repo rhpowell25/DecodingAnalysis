@@ -6,8 +6,8 @@ def Single_File_Decoding(Monkey, Date, Task, Morn_vs_Noon, predict_what):
     from Load_XDS import Load_XDS
     from Process_XDS import Process_XDS
     
-    xds_morn = Load_XDS(Monkey, Date, Task, 'Morn')
-    xds_noon = Load_XDS(Monkey, Date, Task, 'Noon')
+    xds_morn = Load_XDS(Monkey, Date, Task, 1, 'Morn')
+    xds_noon = Load_XDS(Monkey, Date, Task, 1, 'Noon')
     
     # Process the xds files
     if Task == 'PG':
@@ -19,7 +19,8 @@ def Single_File_Decoding(Monkey, Date, Task, Morn_vs_Noon, predict_what):
     if Morn_vs_Noon == 'Morn':
         xds = xds_morn
         # Do you want to reserve trials for testing or train on all trials ('Yes', 'No')
-        reserve_trials = 'No'
+        #reserve_trials = 'No'
+        reserve_trials = 'Yes'
     if Morn_vs_Noon == 'Noon':
         xds = xds_noon
         # Do you want to reserve trials for testing or train on all trials ('Yes', 'No')
@@ -35,8 +36,8 @@ def Single_File_Decoding(Monkey, Date, Task, Morn_vs_Noon, predict_what):
         
     elif predict_what == 'Cursor':
         Zero_Factor = 0
-        from MultiSessionNormalizeCursor import MultiSession_NormalizeCursor
-        Norm_Factor = MultiSession_NormalizeCursor.Multi_Session_Normalize_Cursor(xds_morn, xds_noon, 'All', 95, 1)
+        from Multi_Session_NormalizeCursor import Multi_Session_NormalizeCursor
+        Norm_Factor = Multi_Session_NormalizeCursor(xds_morn, xds_noon, 1)
         
     else:
         Zero_Factor = 0

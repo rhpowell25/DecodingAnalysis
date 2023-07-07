@@ -25,8 +25,8 @@ def Scatter_Depth_vs_Weights(Monkey, Date, Task, predict_what, Save_Figs):
     #%% Load the weights of the neurons 
     from Heatmap_Decoder_Weights import decoder_mesh
     Plot_Figs = 0
-    morn_weight = decoder_mesh('H_morn', Morn_Decoder_Vars, Noon_Decoder_Vars, Plot_Figs)
-    noon_weight = decoder_mesh('H_noon', Noon_Decoder_Vars, Morn_Decoder_Vars, Plot_Figs)
+    morn_weight = decoder_mesh('Morn Decoder Weights', Morn_Decoder_Vars, Noon_Decoder_Vars, Plot_Figs, 'png')
+    noon_weight = decoder_mesh('Noon Decoder Weights', Noon_Decoder_Vars, Morn_Decoder_Vars, Plot_Figs, 'png')
     
     # How do you want to look at the decoder weights ('Mean' vs. 'Max')
     weight_choice = 'Max'
@@ -81,34 +81,55 @@ def Scatter_Depth_vs_Weights(Monkey, Date, Task, predict_what, Save_Figs):
     # Size of the markers
     sz = 20
     
-    # Depth of modulation
-    depth_morn = xds_excel['depth_morn']
-    depth_noon = xds_excel['depth_noon']
-    depth_change = depth_noon - depth_morn
+    # Which firing rate phase do you want to plot? ('Baseline', 'Ramp', 'TgtHold', 'Depth')?
+    fire_rate_phase = 'TgtHold';
+    
+    # Reassign variables according to what you're plotting
+    if fire_rate_phase == 'Baseline':
+        print('Baseline Firing Rate')
+        fire_rate_morn = xds_excel['bsfr_morn']
+        fire_rate_noon = xds_excel['bsfr_noon']
+
+    if fire_rate_phase == 'Ramp':
+        print('Ramp Phase')
+        fire_rate_morn = xds_excel['ramp_morn']
+        fire_rate_noon = xds_excel['ramp_noon']
+    
+    if fire_rate_phase == 'TgtHold':
+        print('TgtHold Phase')
+        fire_rate_morn = xds_excel['TgtHold_morn']
+        fire_rate_noon = xds_excel['TgtHold_noon']
+    
+    if fire_rate_phase == 'Depth':
+        print('Depth of Modulation')
+        fire_rate_morn = xds_excel['depth_morn']
+        fire_rate_noon = xds_excel['depth_noon']
+
+    fire_rate_change = fire_rate_noon - fire_rate_morn
     
     # Decoder weights
     weight_change = noon_weights - morn_weights
     
-    # Depth * weights
-    depth_weight_morn = depth_morn*morn_weights
-    depth_weight_noon = depth_morn*noon_weights
+    # Fire Rate * weights
+    fire_rate_weight_morn = fire_rate_morn*morn_weights
+    fire_rate_weight_noon = fire_rate_morn*noon_weights
 
     # Run the statistics
-    depth_weight_p_val = stats.ttest_rel(depth_weight_morn, depth_weight_noon)[1]
+    fire_rate_weight_p_val = stats.ttest_rel(fire_rate_weight_morn, fire_rate_weight_noon)[1]
     Weights_p_val = stats.ttest_rel(morn_weights, noon_weights)[1]
 
     #%% Scatter plot the morning depth / weights
 
     # Morning scatter plot
     fig, fig_axes = plt.subplots()
-    plt.scatter(depth_morn, morn_weights, s = sz, edgecolors = 'k', )
+    plt.scatter(fire_rate_morn, morn_weights, s = sz, edgecolors = 'k', )
     
     # Mornin scatter title
-    title_string = 'Decoder Weights vs. Morning Depth of Modulation'
+    title_string = 'Decoder Weights vs. Morning ' + fire_rate_phase
     plt.title(title_string, fontname = font_specs.font_name, fontsize = \
               font_specs.title_font_size, fontweight = 'bold')
     # Axis labels
-    plt.xlabel('Morning Depth of Modulation', \
+    plt.xlabel('Morning  ' + fire_rate_phase, \
                fontname = font_specs.font_name, fontsize = font_specs.label_font_size)
     plt.ylabel(weight_choice + ' Decoder Weights', \
                fontname = font_specs.font_name, fontsize = font_specs.label_font_size)
@@ -142,14 +163,14 @@ def Scatter_Depth_vs_Weights(Monkey, Date, Task, predict_what, Save_Figs):
 
     # Afternoon scatter plot
     fig, fig_axes = plt.subplots()
-    plt.scatter(depth_noon, noon_weights, s = sz, edgecolors = 'k', )
+    plt.scatter(fire_rate_noon, noon_weights, s = sz, edgecolors = 'k', )
     
     # Mornin scatter title
-    title_string = 'Decoder Weights vs. Afternoon Depth of Modulation'
+    title_string = 'Decoder Weights vs. Afternoon  ' + fire_rate_phase
     plt.title(title_string, fontname = font_specs.font_name, fontsize = \
               font_specs.title_font_size, fontweight = 'bold')
     # Axis labels
-    plt.xlabel('Afternoon Depth of Modulation', \
+    plt.xlabel('Afternoon  ' + fire_rate_phase, \
                fontname = font_specs.font_name, fontsize = font_specs.label_font_size)
     plt.ylabel(weight_choice + ' Decoder Weights', \
                fontname = font_specs.font_name, fontsize = font_specs.label_font_size)
@@ -244,14 +265,14 @@ def Scatter_Depth_vs_Weights(Monkey, Date, Task, predict_what, Save_Figs):
 
     # Depth change scatter plot
     fig, fig_axes = plt.subplots()
-    plt.scatter(depth_change, weight_change, s = sz, edgecolors = 'k', )
+    plt.scatter(fire_rate_change, weight_change, s = sz, edgecolors = 'k', )
     
     # Mornin scatter title
-    title_string = 'Δ Decoder Weights vs. Δ Depth of Modulation'
+    title_string = 'Δ Decoder Weights vs. Δ ' + fire_rate_phase
     plt.title(title_string, fontname = font_specs.font_name, fontsize = \
               font_specs.title_font_size, fontweight = 'bold')
     # Axis labels
-    plt.xlabel('Δ Depth of Modulation', \
+    plt.xlabel('Δ ' + fire_rate_phase, \
                fontname = font_specs.font_name, fontsize = font_specs.label_font_size)
     plt.ylabel('Δ ' + weight_choice + ' Decoder Weights', \
                fontname = font_specs.font_name, fontsize = font_specs.label_font_size)
@@ -297,29 +318,29 @@ def Scatter_Depth_vs_Weights(Monkey, Date, Task, predict_what, Save_Figs):
     
     # Put the data into a dataframe
     import pandas as pd
-    depth_d = {'Depth of Modulation': np.hstack((depth_morn,depth_noon)), \
+    depth_d = {fire_rate_phase: np.hstack((fire_rate_morn, fire_rate_noon)), \
                'Decoder Weights': np.hstack((morn_weights,noon_weights)), \
-                   'Depth x Weights': np.hstack((depth_weight_morn,depth_weight_noon)), \
+                   'Firing Rate Phase x Weights': np.hstack((fire_rate_weight_morn, fire_rate_weight_noon)), \
                    'Experiment': np.hstack((['Morning']*len(morn_weights), \
                                             ['Afternoon']*len(noon_weights)))}
-    depth_df = pd.DataFrame(data = depth_d, index = range(len(morn_weights)*2))
+    fire_rate_df = pd.DataFrame(data = depth_d, index = range(len(morn_weights)*2))
     
     # Depth change violin plot
     import seaborn as sns
     fig, fig_axes = plt.subplots()
-    sns.violinplot(data=depth_df, x = "Experiment", y = "Depth x Weights", inner = "stick")
+    sns.violinplot(data= fire_rate_df, x = "Experiment", y = "Firing Rate Phase x Weights", inner = "stick")
     
     # Annotation of the p-value
-    if round(depth_weight_p_val, 3) > 0:
-        plt.text(annot_x, 0.95, 'p = ' + str(round(depth_weight_p_val, 3)), 
+    if round(fire_rate_weight_p_val, 3) > 0:
+        plt.text(annot_x, 0.95, 'p = ' + str(round(fire_rate_weight_p_val, 3)), 
         verticalalignment = 'center', horizontalalignment = 'left', 
         transform = fig_axes.transAxes, fontname = font_specs.font_name, fontsize = font_specs.legend_font_size)
-    if round(depth_weight_p_val, 3) == 0:
+    if round(fire_rate_weight_p_val, 3) == 0:
         plt.text(annot_x, 0.95, 'p < 0.001', verticalalignment = 'center', horizontalalignment = 'left', 
                  transform = fig_axes.transAxes, fontname = font_specs.font_name, fontsize = font_specs.legend_font_size)
         
     # Title the violin plot
-    title_string = 'Depth of Modulation x Morning Decoder Weights'
+    title_string = fire_rate_phase + ' x Morning Decoder Weights'
     plt.title(title_string, fontname = font_specs.font_name, \
               fontsize = font_specs.title_font_size, fontweight = 'bold')
 

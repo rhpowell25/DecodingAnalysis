@@ -108,10 +108,10 @@ def CompareDecoderAccuracy(Decoder_Vars, Cross_Decoder_Vars, Save_Figs):
             
   
     # Title the bar chart
-    if len(Trimmed_Acc_avg) > 12:
-        title_string = 'Joint Angle Decoder Accuracy - ' + acc_choice
-    else:
-        title_string = 'EMG Decoder Accuracy - ' + acc_choice
+    #if len(Trimmed_Acc_avg) > 12:
+    #    title_string = 'Joint Angle Decoder Accuracy - ' + acc_choice
+    #else:
+    title_string = 'EMG Decoder Accuracy - ' + acc_choice
             
     plt.title(title_string, fontname = font_specs.font_name, \
               fontsize = font_specs.title_font_size + 10, fontweight = 'bold')

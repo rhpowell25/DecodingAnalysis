@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def decoder_mesh(fig_title, Morn_Decoder_Vars, Noon_Decoder_Vars, Plot_Figs):
+def decoder_mesh(fig_title, Morn_Decoder_Vars, Noon_Decoder_Vars, Plot_Figs, Save_Figs):
     
     """
     This function is used to extract the decoder weights for each neuron and plot
@@ -65,7 +65,19 @@ def decoder_mesh(fig_title, Morn_Decoder_Vars, Noon_Decoder_Vars, Plot_Figs):
         plt.title(fig_title, fontname = font_specs.font_name, fontsize = \
                   font_specs.title_font_size, fontweight = 'bold')
             
-        plt.tight_layout() 
+        plt.tight_layout()
+        
+        # Figure Saving
+        if Save_Figs != 0:
+            save_dir = 'C:/Users/rhpow/Desktop/'
+            fig_title = str.replace(fig_title, ':', '')
+            fig_title = str.replace(fig_title, 'vs.', 'vs')
+            fig_title = str.replace(fig_title, 'mg.', 'mg')
+            fig_title = str.replace(fig_title, 'kg.', 'kg')
+            fig_title = str.replace(fig_title, '.', '_')
+            fig_title = str.replace(fig_title, '/', '_')
+            plt.savefig(save_dir + fig_title + '.' + Save_Figs)
+            plt.close()
         
     return w_all
 

@@ -39,8 +39,8 @@ def CompareDecoding(Monkey, Date, Task, predict_what):
         
     elif predict_what == 'Cursor':
         Zero_Factor = 0
-        from MultiSessionNormalizeCursor import MultiSession_NormalizeCursor
-        Norm_Factor = MultiSession_NormalizeCursor.Multi_Session_Normalize_Cursor(xds_morn, xds_noon, 'All', 95, 1)
+        from Multi_Session_NormalizeCursor import Multi_Session_NormalizeCursor
+        Norm_Factor = Multi_Session_NormalizeCursor(xds_morn, xds_noon, 1)
         
     else:
         Zero_Factor = 0
